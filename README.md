@@ -1,5 +1,6 @@
 ﻿
 
+
 ## XPath Check Tool for desktop applications
 
 This tool allows to check validity of XPaths and highlights found elements.
@@ -15,7 +16,7 @@ This tool allows to check validity of XPaths and highlights found elements.
 
 **Application Screen**
 
-![enter image description here](https://lh3.googleusercontent.com/TyF2yEmd7D16N5bS9OaSX63apPNznXFhGlxKe_Xn-6Ou3tRrd5R9abw2D-35Jc8ZvPHg4Kj0jI4V "Main window")
+![enter image description here](https://lh3.googleusercontent.com/zm6eikA_Km93RFOhij2xjS9SbYMEPGD_6a6SEe0kiTggqhp2EyBC1bxWHGKCXpnSju7QUWH-N32M "Main window")
 
 **Usage**
 
@@ -26,12 +27,16 @@ This tool allows to check validity of XPaths and highlights found elements.
  5. Fill your **XPath**
  6. Click "**Find Elements**" button
  7. If one or more elements was found than list will be created. Clicking through this list will **highlight** elements on screen.
- 8. All errors should be thrown to right text box.
+ 8. Highlight overlay can be turned on or off with **checkbox.**
+ 9. All errors should be thrown to right text box.
 
 **Common Issues** 
 
  1. **Application not found**: Check if application name and path are correct
  Application name could also contain spaces. To be sure you can copy the name from Windows Accessibility Tools > **inspect.exe**.
- 2. **XPath Element not found**: XPath shouldn't contain  outer **quotation marks**
- Valid formats are **//MenuItem[@Name="File"]** or **//MenuItem[@Name=\\"File\\"]**.
-
+ 2. **XPath Element not found**: XPath shouldn't contain  outer **quotation marks.**
+ 
+	 Valid formats are **//MenuItem[@Name="File"]** or **//MenuItem[@Name=\\"File\\"]**.
+	 
+**Download**
+You can [download](https://github.com/cngroupdk/Windows-Xpath-check/releases) the most recent version from github releases tab.
