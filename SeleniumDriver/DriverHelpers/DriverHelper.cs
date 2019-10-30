@@ -24,7 +24,6 @@ namespace SeleniumDriver.DriverHelpers
         private readonly WindowsElement appWindow;
         private const int CommandTimeoutSeconds = 180;
         Process testApp;
-        private bool IsWindowsDriver = false;
         private readonly Process driverProcess;
 
         public DriverHelper(Browser browserType, string appNameInput, string appPathInput, bool startApp)
@@ -45,7 +44,6 @@ namespace SeleniumDriver.DriverHelpers
 
                 case Browser.Windows:
 
-                    IsWindowsDriver = true;
                     var projectPath = Path.GetDirectoryName(Path.GetPathRoot(Directory.GetCurrentDirectory()));
                     driverProcess = new Process();
                     driverProcess.StartInfo.CreateNoWindow = true;
@@ -317,6 +315,7 @@ namespace SeleniumDriver.DriverHelpers
         {
             Driver.Navigate().GoToUrl(url);
         }
+
 
         public IWait<IWebDriver> Wait(int timeout)
         {

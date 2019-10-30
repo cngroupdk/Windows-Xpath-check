@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:XPathConsole"
-        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="XPathConsole.MainWindow"
+        xmlns:local="clr-namespace:XPathCheck"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="XPathCheck.MainWindow"
         mc:Ignorable="d"
         Title="XPathCheck" Height="450" Width="800" Closed="Window_Closed">
     <Grid>
@@ -21,6 +21,7 @@
         <TextBox x:Name="tbAppPath" HorizontalAlignment="Left" Height="26" Margin="205,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="180" Text="C:\Windows\notepad.exe" ToolTip="App Path"/>
         <CheckBox x:Name="cbStartApp" Content="Start App" HorizontalAlignment="Left" Margin="205,36,0,0" VerticalAlignment="Top"/>
         <Image x:Name="imLogo" Grid.Column="1" HorizontalAlignment="Left" Height="196" Margin="99,280,0,-57" VerticalAlignment="Top" Width="190" Source="img/cnlogo.png"/>
+        <CheckBox x:Name="cbOverlay" Content="Overlay" HorizontalAlignment="Left" Margin="10,370,0,0" VerticalAlignment="Top" Click="cbOverlay_Click" IsChecked="True"/>
 
     </Grid>
 </Window>

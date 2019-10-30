@@ -8,9 +8,8 @@ using SeleniumDriver.Classes;
 using SeleniumDriver.DriverHelpers;
 using OpenQA.Selenium;
 using System.Text.RegularExpressions;
-using System.Windows.Media.Imaging;
 
-namespace XPathConsole
+namespace XPathCheck
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -26,6 +25,7 @@ namespace XPathConsole
         public TextBox TbAppPath => tbAppPath;
         public TextBox TbAppName => tbAppName;
         public CheckBox CbStartApp => cbStartApp;
+        public CheckBox CbOverlay => cbOverlay;
         public MainWindow()
         {
             InitializeComponent();
@@ -35,8 +35,8 @@ namespace XPathConsole
 
         private void btnFindElementsButton_Click(object sender, RoutedEventArgs e)
         {
-            string userXPath = Regex.Unescape(tbXPath.Text);
-            PageObject pageobject = new PageObject(By.XPath(userXPath), "testElement");
+            var userXPath = Regex.Unescape(tbXPath.Text);
+            var pageobject = new PageObject(By.XPath(userXPath), "testElement");
             TbXPathResponse.Text = "";
             var appWindow = driver.GetAppWindow();
             highlight.SnapToApp(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
@@ -67,7 +67,7 @@ namespace XPathConsole
             var appWindow = driver.GetAppWindow();
             highlight.SnapToApp(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
             var index = lvFoundElements.SelectedIndex;
-            highlight.drawRect(foundElementsList[index].Location.X, foundElementsList[index].Location.Y, foundElementsList[index].Size.Width, foundElementsList[index].Size.Height);
+            highlight.DrawRect(foundElementsList[index].Location.X, foundElementsList[index].Location.Y, foundElementsList[index].Size.Width, foundElementsList[index].Size.Height);
         }
 
         private void btnFindApp_Click(object sender, RoutedEventArgs e)
@@ -84,6 +84,7 @@ namespace XPathConsole
                 highlight = new Highlight(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
                 btnFindApp.Background = Brushes.Green;
                 btnFindApp.Content = "App Found!";
+                cbOverlay.IsChecked = true;
             }
             catch (Exception exception)
             {
@@ -99,6 +100,20 @@ namespace XPathConsole
         {
             highlight?.Close();
             driver?.Dispose();
+        }
+
+        private void cbOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            if (cbOverlay.IsChecked.GetValueOrDefault())
+            {
+                highlight?.Show();
+                var appWindow = driver.GetAppWindow();
+                highlight?.SnapToApp(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
+            }
+            else
+            {
+                highlight?.Hide();
+            }
         }
     }
 }
