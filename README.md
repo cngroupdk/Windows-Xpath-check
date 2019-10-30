@@ -39,4 +39,5 @@ This tool allows to check validity of XPaths and highlights found elements.
 	 Valid formats are **//MenuItem[@Name="File"]** or **//MenuItem[@Name=\\"File\\"]**.
 	 
 **Download**
+
 You can [download](https://github.com/cngroupdk/Windows-Xpath-check/releases) the most recent version from github releases tab.
