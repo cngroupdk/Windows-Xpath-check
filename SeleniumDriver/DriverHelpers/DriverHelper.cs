@@ -90,11 +90,6 @@ namespace SeleniumDriver.DriverHelpers
 
         }
 
-        public Browser getBrowser()
-        {
-            return browser;
-        }
-
         public IWebElement FindElement(PageObject pageObject, int timeout)
         {
             try
@@ -321,47 +316,6 @@ namespace SeleniumDriver.DriverHelpers
         public void NavigateToUrl(string url)
         {
             Driver.Navigate().GoToUrl(url);
-        }
-
-        public void WaitForAjax(int timeout, bool jquery = true)
-        {
-            Debug.WriteLine("WaitForAjax()...\nWaiting for readyState...");
-
-            Wait(timeout).Until(d =>
-                 (bool)((IJavaScriptExecutor)Driver).ExecuteScript("console.log(document.readyState); return document.readyState == \"complete\""));
-
-            Debug.WriteLine("ReadyState = complete.");
-            Debug.WriteLine("Waiting for jQuery.active...");
-
-            try
-            {
-                Wait(timeout).Until(d =>
-                    (bool)((IJavaScriptExecutor)Driver).ExecuteScript("return jQuery.active == 0"));
-
-                Debug.WriteLine("jQuery.active = 0.");
-            }
-            catch (Exception ex) when (jquery && (ex is InvalidOperationException || ex is WebDriverException))
-            {
-                // jquery doesn't exist in current context
-                Debug.WriteLine("WaitForAjax() ajax not existing in this page. Repeating WaitForAjax()...");
-                System.Threading.Thread.Sleep(2000);
-                WaitForAjax(timeout, false);
-            }
-            catch (InvalidOperationException)
-            {
-                // jquery doesn't exist in current context
-                Debug.WriteLine("WaitForAjax() ajax not existing in this page. Skipping and continue.");
-
-                return;
-            }
-            catch (WebDriverException)
-            {
-                Debug.WriteLine("WaitForAjax() jQuery is not defined in this page. Skipping and continue.");
-
-                return;
-            }
-
-            Debug.WriteLine("WaitForAjax() ajax finished.");
         }
 
         public IWait<IWebDriver> Wait(int timeout)
