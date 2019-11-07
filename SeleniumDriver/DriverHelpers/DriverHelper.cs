@@ -20,7 +20,7 @@ namespace SeleniumDriver.DriverHelpers
         readonly Process testApp;
         private readonly Process driverProcess;
 
-        public DriverHelper(string appNameInput, string appPathInput, bool startApp)
+        public DriverHelper( string appPathInput, bool startApp)
         {
             var projectPath = Path.GetDirectoryName(Path.GetPathRoot(Directory.GetCurrentDirectory()));
             driverProcess = new Process();
@@ -28,10 +28,7 @@ namespace SeleniumDriver.DriverHelpers
             driverProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             driverProcess.StartInfo.FileName = projectPath + "\\Driver\\WinAppDriver.exe";
             driverProcess.Start();
-            var appCapabilities = new DesiredCapabilities();
-            var appName = appNameInput;
-            var windowsApplicationDriverUrl = ConfigurationManager.AppSettings["WindowsApplicationDriverUrl"];
-
+            
             if (startApp)
             {
                 testApp = Process.Start(appPathInput);
@@ -40,16 +37,16 @@ namespace SeleniumDriver.DriverHelpers
 
             }
 
-            appCapabilities.SetCapability("app", "Root");
+            //appCapabilities.SetCapability("app", "Root");
 
-            var testAppWindow = new WindowsDriver<WindowsElement>(new Uri(windowsApplicationDriverUrl), appCapabilities).FindElementByName(appName);
-            appWindow = testAppWindow;
-            var testAppTopLevelWindowHandle = testAppWindow.GetAttribute("NativeWindowHandle");
-            testAppTopLevelWindowHandle = (int.Parse(testAppTopLevelWindowHandle)).ToString("x");
+            //appWindow = new WindowsDriver<WindowsElement>(new Uri(windowsApplicationDriverUrl), appCapabilities).FindElementByName(appName);
+           
+            //var testAppTopLevelWindowHandle = appWindow.GetAttribute("NativeWindowHandle");
+            //testAppTopLevelWindowHandle = (int.Parse(testAppTopLevelWindowHandle)).ToString("x");
 
-            var testAppCapabilities = new DesiredCapabilities();
-            testAppCapabilities.SetCapability("appTopLevelWindow", testAppTopLevelWindowHandle);
-            Driver = new WindowsDriver<WindowsElement>(new Uri(windowsApplicationDriverUrl), testAppCapabilities);
+            //var testAppCapabilities = new DesiredCapabilities();
+            //testAppCapabilities.SetCapability("appTopLevelWindow", testAppTopLevelWindowHandle);
+            //Driver = new WindowsDriver<WindowsElement>(new Uri(windowsApplicationDriverUrl), testAppCapabilities);
         }
 
         public IWebElement FindElement(By selector, int timeout)
@@ -82,10 +79,6 @@ namespace SeleniumDriver.DriverHelpers
             return new WebDriverWait(Driver, TimeSpan.FromMilliseconds(timeout));
         }
 
-        public WindowsElement GetAppWindow()
-        {
-            return appWindow;
-        }
 
         public void Dispose()
         {
