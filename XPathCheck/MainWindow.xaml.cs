@@ -106,9 +106,9 @@ namespace XPathCheck
         {
             if (cbOverlay.IsChecked.GetValueOrDefault())
             {
-                highlight?.Show();
                 var appWindow = driver.GetAppWindow();
                 highlight?.SnapToApp(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
+                highlight?.Show();
             }
             else
             {
