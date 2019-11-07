@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
-using SeleniumDriver.Classes;
 using ExpectedConditions = SeleniumExtras.WaitHelpers.ExpectedConditions;
 using OpenQA.Selenium.Appium.Windows;
 using OpenQA.Selenium.Remote;

@@ -64,10 +64,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\PageObject.cs" />
-    <Compile Include="Classes\PageObjectElements.cs" />
     <Compile Include="DriverHelpers\DriverHelper.cs" />
-    <Compile Include="Classes\PageObjectAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

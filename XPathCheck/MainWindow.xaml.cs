@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using SeleniumDriver.Classes;
 using SeleniumDriver.DriverHelpers;
 using OpenQA.Selenium;
 using System.Text.RegularExpressions;
@@ -36,7 +35,6 @@ namespace XPathCheck
         private void btnFindElementsButton_Click(object sender, RoutedEventArgs e)
         {
             var userXPath = Regex.Unescape(tbXPath.Text);
-            var pageobject = new PageObject(By.XPath(userXPath), "testElement");
             TbXPathResponse.Text = "";
             var appWindow = driver.GetAppWindow();
             highlight.SnapToApp(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
@@ -44,7 +42,7 @@ namespace XPathCheck
             try
             {
                 lvFoundElements.Items.Clear();
-                var foundElements = driver.FindElements(pageobject, 5);
+                var foundElements = driver.FindElements(By.XPath(userXPath), 5);
                 foundElementsList = foundElements;
                 tbXPathResponse.Text = "";
 
@@ -79,7 +77,7 @@ namespace XPathCheck
                 btnFindApp.Background = Brushes.Red;
                 highlight?.Close();
                 driver?.Dispose();
-                driver = new DriverHelper(Browser.Windows, tbAppName.Text, tbAppPath.Text, cbStartApp.IsChecked.Value);
+                driver = new DriverHelper(tbAppName.Text, tbAppPath.Text, cbStartApp.IsChecked.Value);
                 var appWindow = driver.GetAppWindow();
                 highlight = new Highlight(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
                 btnFindApp.Background = Brushes.Green;
