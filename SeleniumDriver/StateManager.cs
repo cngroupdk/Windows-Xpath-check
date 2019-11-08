@@ -11,12 +11,14 @@ using OpenQA.Selenium.Remote;
 
 namespace SeleniumDriver
 {
-    public class AppState : IDisposable
+    public class StateManager<TOverlay> : IDisposable
+        where TOverlay: class, IHighlight, new ()
     {
         private WindowsElement _app;
         private WindowsDriver<WindowsElement> _driver;
         private Process _driverProcess;
         private Process _appProcess;
+        private TOverlay _overlay;
 
         public WindowsElement GetApp()
         {
@@ -26,6 +28,11 @@ namespace SeleniumDriver
         public WindowsDriver<WindowsElement> GetDriver()
         {
             return _driver ?? throw new Exception("Sorry dude, bad workflow");
+        }
+
+        public TOverlay GetOverlay()
+        {
+            return _overlay ?? throw new Exception("Sorry dude, bad workflow");
         }
 
         public void InitApp(string appName, string appPathInput, bool startApp =false)
@@ -53,12 +60,28 @@ namespace SeleniumDriver
             var factory = new WindowsAppFactory();
             _app =  factory.CreateApp(appName);
             _driver = factory.CreateDriver(_app);
+            _overlay = new TOverlay();
+            _overlay.Init(_app.Coordinates.LocationInViewport.X, _app.Coordinates.LocationInViewport.Y,_app.Size.Width, _app.Size.Height);
         }
 
+        public void SnapToApp()
+        {
+            var highlight = GetOverlay();
+            var appWindow = GetApp();
+            highlight.SnapToApp(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
+
+        }
+
+        public void Close()
+        {
+            Dispose();
+        }
+        
         public void Dispose()
         {
             _driver?.Dispose();
             _driverProcess?.Dispose();
+            _overlay?.Close();
             //We do not dispose appProces to do nto close that app when this application is closed
         }
     }
