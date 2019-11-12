@@ -4,8 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using SeleniumDriver.Classes;
-using SeleniumDriver.DriverHelpers;
+using SeleniumDriver;
 using OpenQA.Selenium;
 using System.Text.RegularExpressions;
 
@@ -14,13 +13,12 @@ namespace XPathCheck
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IDisposable
     {
-        DriverHelper driver;
+        private readonly StateManager<Highlight> _stateManager = new StateManager<Highlight>();
         public TextBox TbXPath => tbXPath;
         public TextBox TbXPathResponse => tbXPathResponse;
         public ListView LvFoundElements => lvFoundElements;
-        private Highlight highlight;
         private List<IWebElement> foundElementsList;
         public TextBox TbAppPath => tbAppPath;
         public TextBox TbAppName => tbAppName;
@@ -36,22 +34,18 @@ namespace XPathCheck
         private void btnFindElementsButton_Click(object sender, RoutedEventArgs e)
         {
             var userXPath = Regex.Unescape(tbXPath.Text);
-            var pageobject = new PageObject(By.XPath(userXPath), "testElement");
             TbXPathResponse.Text = "";
-            var appWindow = driver.GetAppWindow();
-            highlight.SnapToApp(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
-
             try
             {
+                _stateManager.SnapToApp();
                 lvFoundElements.Items.Clear();
-                var foundElements = driver.FindElements(pageobject, 5);
+                var foundElements = _stateManager.GetDriver().FindElements(userXPath, 5);
                 foundElementsList = foundElements;
                 tbXPathResponse.Text = "";
 
                 foreach (var element in foundElements)
                 {
                     lvFoundElements.Items.Add("Text: " + element.Text + " \t " + "TagName: " + element.TagName);
-
                 }
             }
             catch (Exception exception)
@@ -64,27 +58,28 @@ namespace XPathCheck
 
         private void listView_Click(object sender, MouseButtonEventArgs e)
         {
-            var appWindow = driver.GetAppWindow();
+            var appWindow = _stateManager.GetApp();
+            var highlight = _stateManager.GetOverlay();
             highlight.SnapToApp(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
             var index = lvFoundElements.SelectedIndex;
-            highlight.DrawRect(foundElementsList[index].Location.X, foundElementsList[index].Location.Y, foundElementsList[index].Size.Width, foundElementsList[index].Size.Height);
+            if (index < 0 || foundElementsList.Count <= index) return;
+            var element = foundElementsList[index];
+            highlight.DrawRect(element.Location.X, element.Location.Y, element.Size.Width, element.Size.Height);
         }
 
         private void btnFindApp_Click(object sender, RoutedEventArgs e)
         {
+            lvFoundElements.Items.Clear();
             tbXPathResponse.Text = "";
             btnFindApp.Content = "Finding App...";
+            btnFindApp.Background = Brushes.Red;
             try
             {
-                btnFindApp.Background = Brushes.Red;
-                highlight?.Close();
-                driver?.Dispose();
-                driver = new DriverHelper(Browser.Windows, tbAppName.Text, tbAppPath.Text, cbStartApp.IsChecked.Value);
-                var appWindow = driver.GetAppWindow();
-                highlight = new Highlight(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
-                btnFindApp.Background = Brushes.Green;
-                btnFindApp.Content = "App Found!";
-                cbOverlay.IsChecked = true;
+                var appName = tbAppName.Text;
+                var appPath = tbAppPath.Text;
+                var start = cbStartApp.IsChecked.Value;
+                _stateManager.InitApp(appName, appPath, start);
+                OnAppFound();
             }
             catch (Exception exception)
             {
@@ -96,17 +91,24 @@ namespace XPathCheck
             }
         }
 
+        private void OnAppFound()
+        {
+            btnFindApp.Background = Brushes.Green;
+            btnFindApp.Content = "App Found!";
+            cbOverlay.IsChecked = true;
+        }
+
         private void Window_Closed(object sender, EventArgs e)
         {
-            highlight?.Close();
-            driver?.Dispose();
+            _stateManager.Close();
         }
 
         private void cbOverlay_Click(object sender, RoutedEventArgs e)
         {
+            var highlight = _stateManager.GetOverlay();
             if (cbOverlay.IsChecked.GetValueOrDefault())
             {
-                var appWindow = driver.GetAppWindow();
+                var appWindow = _stateManager.GetApp();
                 highlight?.SnapToApp(appWindow.Coordinates.LocationInViewport.X, appWindow.Coordinates.LocationInViewport.Y, appWindow.Size.Width, appWindow.Size.Height);
                 highlight?.Show();
             }
@@ -114,6 +116,11 @@ namespace XPathCheck
             {
                 highlight?.Hide();
             }
+        }
+
+        public void Dispose()
+        {
+            _stateManager?.Dispose();
         }
     }
 }

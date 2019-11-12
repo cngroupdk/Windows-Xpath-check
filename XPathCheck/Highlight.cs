@@ -1,17 +1,17 @@
-﻿using System;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
+using SeleniumDriver;
 
 namespace XPathCheck
 {
-    class Highlight
+    class Highlight : IHighlight
     {
         private Window overlayWindow;
         private Canvas overlay;
         private Polygon poly;
-        public Highlight(int x, int y, int w, int h)
+        public void Init(int x, int y, int w, int h)
         {
             overlayWindow = new Window
             {
