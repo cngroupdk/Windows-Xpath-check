@@ -8,5 +8,6 @@
         void Hide();
         void Show();
         void SnapToApp(int x, int y, int w, int h);
+        void Clear();
     }
 }

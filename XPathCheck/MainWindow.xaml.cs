@@ -37,6 +37,7 @@ namespace XPathCheck
             TbXPathResponse.Text = "";
             try
             {
+                _stateManager.GetOverlay().Clear();
                 _stateManager.SnapToApp();
                 lvFoundElements.Items.Clear();
                 var foundElements = _stateManager.GetDriver().FindElements(userXPath, 5);
@@ -69,6 +70,7 @@ namespace XPathCheck
 
         private void btnFindApp_Click(object sender, RoutedEventArgs e)
         {
+            btnFindElements.IsEnabled = false;
             lvFoundElements.Items.Clear();
             tbXPathResponse.Text = "";
             btnFindApp.Content = "Finding App...";
@@ -96,6 +98,7 @@ namespace XPathCheck
             btnFindApp.Background = Brushes.Green;
             btnFindApp.Content = "App Found!";
             cbOverlay.IsChecked = true;
+            btnFindElements.IsEnabled = true;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -116,6 +119,11 @@ namespace XPathCheck
             {
                 highlight?.Hide();
             }
+        }
+
+        private void cbStartApp_Click(object sender, RoutedEventArgs e)
+        {
+            tbAppPath.IsEnabled = cbStartApp.IsChecked.GetValueOrDefault();
         }
 
         public void Dispose()

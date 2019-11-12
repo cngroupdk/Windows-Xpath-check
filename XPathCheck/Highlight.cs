@@ -46,6 +46,11 @@ namespace XPathCheck
             overlay.Children.Add(poly);
         }
 
+        public void Clear()
+        {
+            overlay.Children.Clear();
+        }
+
         public void Close()
         {
             overlayWindow?.Close();
