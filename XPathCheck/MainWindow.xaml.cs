@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -8,8 +7,6 @@ using System.Windows.Media;
 using SeleniumDriver;
 using OpenQA.Selenium;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace XPathCheck
 {
@@ -72,6 +69,7 @@ namespace XPathCheck
 
         private void btnFindApp_Click(object sender, RoutedEventArgs e)
         {
+            lvFoundElements.Items.Clear();
             tbXPathResponse.Text = "";
             btnFindApp.Content = "Finding App...";
             btnFindApp.Background = Brushes.Red;
