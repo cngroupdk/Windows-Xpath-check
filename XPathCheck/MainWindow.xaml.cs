@@ -38,9 +38,9 @@ namespace XPathCheck
         {
             var userXPath = Regex.Unescape(tbXPath.Text);
             TbXPathResponse.Text = "";
-            _stateManager.SnapToApp();
             try
             {
+                _stateManager.SnapToApp();
                 lvFoundElements.Items.Clear();
                 var foundElements = _stateManager.GetDriver().FindElements(userXPath, 5);
                 foundElementsList = foundElements;
@@ -69,7 +69,7 @@ namespace XPathCheck
             var element = foundElementsList[index];
             highlight.DrawRect(element.Location.X, element.Location.Y, element.Size.Width, element.Size.Height);
         }
-        
+
         private void btnFindApp_Click(object sender, RoutedEventArgs e)
         {
             tbXPathResponse.Text = "";
